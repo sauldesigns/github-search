@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_search/models/user.dart';
 import 'package:github_search/services/github_api.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +68,12 @@ class _SearchPageState extends State<SearchPage> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.check_circle),
+                            icon: githubApi.isFetching == true
+                                ? SpinKitChasingDots(
+                                    color: Colors.white,
+                                    size: 25,
+                                  )
+                                : Icon(Icons.check_circle),
                             color: searchValue == ''
                                 ? Colors.white24
                                 : Colors.greenAccent,
@@ -90,17 +96,31 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: githubApi.hasData == true
-                  ? ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(userData.avatar),
-                      ),
-                      title: Text(userData.username),
-                    )
-                  : Container(),
-            ),
+            (githubApi.hasData == true && githubApi.isFetching == false)
+                ? Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white12,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(userData.avatar),
+                          ),
+                          title: Text(
+                            userData.username,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          onTap: () {},
+                        )),
+                  )
+                : Container(),
           ],
         ),
       ),
