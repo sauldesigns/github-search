@@ -1,7 +1,10 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_search/models/user.dart';
+import 'package:github_search/pages/repo.dart';
 import 'package:github_search/services/github_api.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -13,6 +16,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   String searchValue = '';
   User userData;
+  final NumberFormat numberFormat = NumberFormat.compact();
 
   void searchUser(GithubApi githubApi, String searchValue, String category) {
     githubApi.fetchUserData(
@@ -118,7 +122,38 @@ class _SearchPageState extends State<SearchPage> {
                             userData.username,
                             style: TextStyle(fontSize: 18),
                           ),
-                          onTap: () {},
+                          subtitle: Text(userData.bio +
+                              '\n' +
+                              '# of repositories: ' +
+                              numberFormat.format(userData.publicRepos)),
+                          onTap: () {
+                            if (userData.reposUrl != null) {
+                              try {
+                                githubApi.fetchRepoData(
+                                    query: userData.reposUrl);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => RepoListPage(),
+                                  ),
+                                );
+                              } catch (e) {
+                                print(e);
+                              }
+                            } else {
+                              Flushbar(
+                                flushbarPosition: FlushbarPosition.TOP,
+                                margin: EdgeInsets.all(8.0),
+                                borderRadius: 10,
+                                duration: Duration(seconds: 5),
+                                message:
+                                    'Error!',
+                                icon: Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                ),
+                              )..show(context);
+                            }
+                          },
                         )),
                   )
                 : Container(),

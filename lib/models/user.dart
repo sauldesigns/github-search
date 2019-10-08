@@ -11,13 +11,16 @@ class User {
   final String eventsUrl;
   final String name;
   final String company;
+  final String bio;
   final String blog;
+  final int publicRepos;
 
   User({
     this.username,
     this.avatar,
     this.htmlUrl,
     this.followersUrl,
+    this.bio,
     this.followingUrl,
     this.starredUrl,
     this.subscriptionUrl,
@@ -27,6 +30,7 @@ class User {
     this.name,
     this.company,
     this.blog,
+    this.publicRepos
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -41,9 +45,11 @@ class User {
       organizationsUrl: json['organizations_url'],
       reposUrl: json['repos_url'],
       eventsUrl: json['events_url'],
-      name: json['name'] ?? 'loading..',
-      company: json['company'] ?? 'loading..',
-      blog: json['blog'] ?? 'loading..',
+      name: json['name'] ?? '...',
+      company: json['company'] ?? '...',
+      blog: json['blog'] ?? '..',
+      bio: json['bio'] ?? '...',
+      publicRepos: json['public_repos'] ?? 0,
     );
   }
 }
