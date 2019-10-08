@@ -1,6 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:github_search/enums/connectivity.dart';
 import 'package:github_search/models/user.dart';
 import 'package:github_search/pages/repo.dart';
 import 'package:github_search/services/github_api.dart';
@@ -29,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     GithubApi githubApi = Provider.of<GithubApi>(context);
     User userData = githubApi.getUser;
+    ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(31, 26, 36, 1),
       body: Center(
@@ -47,6 +49,17 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
             ),
+            connectivity == ConnectivityStatus.Offline
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Center(
+                      child: Text(
+                        'Device is Offline',
+                        style: TextStyle(fontSize: 20, color: Colors.red),
+                      ),
+                    ),
+                  )
+                : Container(),
             Padding(
               padding: const EdgeInsets.only(left: 50.0, right: 50.0),
               child: Center(
@@ -62,7 +75,10 @@ class _SearchPageState extends State<SearchPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: TextField(
-                      autofocus: true,
+                      enabled: connectivity == ConnectivityStatus.Offline
+                          ? false
+                          : true,
+                      autofocus: false,
                       cursorColor: Colors.white,
                       style: TextStyle(
                         fontSize: 20,
@@ -83,9 +99,15 @@ class _SearchPageState extends State<SearchPage> {
                                 ? Colors.white24
                                 : Colors.greenAccent,
                             splashColor: Colors.transparent,
-                            onPressed: () {
-                              searchUser(githubApi, searchValue, 'users');
-                            },
+                            onPressed:
+                                connectivity == ConnectivityStatus.Offline
+                                    ? null
+                                    : () {
+                                        if (searchValue != '') {
+                                          searchUser(
+                                              githubApi, searchValue, 'users');
+                                        }
+                                      },
                           ),
                           hintText: 'Search username'),
                       onChanged: (value) {
@@ -94,7 +116,9 @@ class _SearchPageState extends State<SearchPage> {
                         });
                       },
                       onSubmitted: (_) {
-                        searchUser(githubApi, searchValue, 'users');
+                        if (searchValue != '') {
+                          searchUser(githubApi, searchValue, 'users');
+                        }
                       },
                     ),
                   ),
@@ -145,8 +169,7 @@ class _SearchPageState extends State<SearchPage> {
                                 margin: EdgeInsets.all(8.0),
                                 borderRadius: 10,
                                 duration: Duration(seconds: 5),
-                                message:
-                                    'Error!',
+                                message: 'Error!',
                                 icon: Icon(
                                   Icons.error,
                                   color: Colors.red,

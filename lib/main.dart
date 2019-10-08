@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:github_search/enums/connectivity.dart';
 import 'package:github_search/pages/search.dart';
+import 'package:github_search/services/connectivity.dart';
 import 'package:github_search/services/github_api.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +14,10 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<GithubApi>(
           builder: (_) => GithubApi(),
+        ),
+        StreamProvider<ConnectivityStatus>.controller(
+          builder: (context) =>
+              ConnectivityService().connectionStatusController,
         ),
       ],
       child: MaterialApp(
