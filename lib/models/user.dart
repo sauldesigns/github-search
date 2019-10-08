@@ -31,8 +31,8 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      username: json['login'],
-      avatar: json['avatar_url'],
+      username: json['login'] ?? 'Error loading data',
+      avatar: json['avatar_url'] ?? 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
       htmlUrl: json['html_url'],
       followersUrl: json['followers_url'],
       followingUrl: json['following_url'],
@@ -41,9 +41,9 @@ class User {
       organizationsUrl: json['organizations_url'],
       reposUrl: json['repos_url'],
       eventsUrl: json['events_url'],
-      name: json['name'],
-      company: json['company'],
-      blog: json['blog'],
+      name: json['name'] ?? 'loading..',
+      company: json['company'] ?? 'loading..',
+      blog: json['blog'] ?? 'loading..',
     );
   }
 }

@@ -30,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
       body: Center(
         child: ListView(
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 50.0),
