@@ -150,10 +150,10 @@ class _SearchPageState extends State<SearchPage> {
                               '\n' +
                               '# of repositories: ' +
                               numberFormat.format(userData.publicRepos)),
-                          onTap: () {
+                          onTap: () async {
                             if (userData.reposUrl != null) {
                               try {
-                                githubApi.fetchRepoData(
+                                await githubApi.fetchRepoData(
                                     query: userData.reposUrl);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
