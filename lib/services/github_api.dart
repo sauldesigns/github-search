@@ -26,7 +26,7 @@ class GithubApi with ChangeNotifier {
     notifyListeners();
 
     var response = await http.get(apiURL + category + '/' + query);
-    
+
     _jsonResponse = response.body;
 
     user = User.fromJson(json.decode(_jsonResponse));
