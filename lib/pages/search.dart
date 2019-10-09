@@ -138,9 +138,21 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
                         child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage(userData.avatar),
+                          leading: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 10.0,
+                                    color: Colors.black87,
+                                    spreadRadius: 3,
+                                    offset: Offset(1, 2)),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(userData.avatar),
+                            ),
                           ),
                           title: Text(
                             userData.username,
