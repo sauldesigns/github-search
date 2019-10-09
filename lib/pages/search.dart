@@ -143,9 +143,9 @@ class _SearchPageState extends State<SearchPage> {
                               borderRadius: BorderRadius.circular(50),
                               boxShadow: [
                                 BoxShadow(
-                                    blurRadius: 10.0,
+                                    blurRadius: 5.0,
                                     color: Colors.black87,
-                                    spreadRadius: 3,
+                                    spreadRadius: 1,
                                     offset: Offset(1, 2)),
                               ],
                             ),
