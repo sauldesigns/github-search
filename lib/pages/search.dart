@@ -1,6 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:github_search/enums/connectivity.dart';
 import 'package:github_search/models/user.dart';
 import 'package:github_search/pages/repo.dart';
@@ -39,13 +40,20 @@ class _SearchPageState extends State<SearchPage> {
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Center(
+                child: Icon(
+                  FontAwesomeIcons.github,
+                  size: 80,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: Center(
                 child: Text(
-                  'Github',
-                  style: TextStyle(
-                    fontSize: 50,
-                  ),
+                  'Search',
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
             ),

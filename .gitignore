@@ -74,5 +74,4 @@
 pubspec.lock
 .vscode/launch.json
 ios/Podfile.lock
-pubspec.lock
 
