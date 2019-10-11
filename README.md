@@ -1,16 +1,73 @@
-# github_search
+# Github Search
 
-A new Flutter project.
+[![Codemagic build status](https://api.codemagic.io/apps/5d9c5d229b09d3386c647569/5d9c5d229b09d3386c647568/status_badge.svg)](https://codemagic.io/apps/5d9c5d229b09d3386c647569/5d9c5d229b09d3386c647568/latest_build)
 
-## Getting Started
+Github Search is a cross-platform mobile application powered by Flutter Framework and Github API.
 
-This project is a starting point for a Flutter application.
+The application was built with simplicity in mind so that users are able to search github users and bookmark their profile/repos for quick and easy access.  
 
-A few resources to get you started if this is your first Flutter project:
+The app uses an easy to use UI so that only prompts the user to enter a username, or simply click on a bookmarked user/repo.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+| Landing Page | User Page |
+| ------ | ------ |
+|<img src="github_assets/initial_screen.png" width="400" height="700">| <img src="github_assets/user_profile.png" width="400" height="700">|
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### How to Seach Users
+  - Initial page will prompt for you to search for username. 
+    - This will search for user's github username and return information of the user if the user exist underneath the search bar. 
+  - Click on the user view the user's public repositories. 
+
+### Database
+  - Powered By SQL (Currently not implemented)
+
+
+### API
+  - Powered by Github API
+
+>Github Search uses Github API to return github related data such as public repos, avatar, name, and bio. 
+
+### Open Source Projects
+Github Search uses a number of open source projects to work properly:
+
+  - [Connectivity] - Allows app to discover network connectivity and configure themseleves accordingly allowing app to show error when not connected to the internet.
+  - [Flushbar] - Makes it easier to display snackbar messages. 
+  - [Provider] - For State Management
+  - [http] - Future based library for making HTTP requests
+  - [flutter_spinkit] - animated loading icons
+  - [url_launcher] -  Flutter plugin for launching a URL in the mobile platform
+ 
+
+### Mobile Application Installation
+
+| Android | iOS |
+| ------ | ------ |
+| In-progress | In-progress |
+
+Application in progress of being uploaded to both the iOS and Android App store.
+
+### Todos
+  - Write MORE Tests
+  - Add smoother transitions/animations. 
+  - Add SQL database 
+  - Feature to bookmark users or repos
+  - Add more features
+
+
+  [url_launcher]: <https://pub.dev/packages/url_launcher>
+  [flutter_spinkit]: <https://pub.dev/packages/flutter_spinkit>
+  [provider]: <https://pub.dev/packages/provider>
+  [firebase core]: <https://pub.dev/packages/firebase_core>
+  [firebase auth]: <https://pub.dev/packages/firebase_auth>
+  [firebase storage]: <https://pub.dev/packages/firebase_storage>
+  [firebase cloud firestore]: <https://pub.dev/packages/cloud_firestore>
+  [http]: <https://pub.dev/packages/http>
+  [url launcher]: <https://pub.dev/packages/url_launcher>
+  [image picker]: <https://pub.dev/packages/image_picker>
+  [connectivity]: <https://pub.dev/packages/connectivity>
+  [flushbar]: <https://pub.dev/packages/flushbar>
+  [Email Validator]: <https://pub.dev/packages/email_validator>
+  [Fancy Bottom Navigation]: <https://pub.dev/packages/fancy_bottom_navigation>
+  [Google Sign In]: <https://pub.dev/packages/google_sign_in>
+  [Flutter Slidable]: <https://pub.dev/packages/flutter_slidable>  
+  
+  
