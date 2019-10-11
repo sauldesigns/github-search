@@ -1,6 +1,6 @@
 # Github Search
 
-[![Codemagic build status](https://api.codemagic.io/apps/5d9c5d229b09d3386c647569/5d9c5d229b09d3386c647568/status_badge.svg)](https://codemagic.io/apps/5d9c5d229b09d3386c647569/5d9c5d229b09d3386c647568/latest_build)
+![Codemagic build status](https://api.codemagic.io/apps/5d9c5d229b09d3386c647569/5d9c5d229b09d3386c647568/status_badge.svg)
 
 Github Search is a cross-platform mobile application powered by Flutter Framework and Github API.
 
