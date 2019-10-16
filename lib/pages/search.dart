@@ -19,7 +19,6 @@ class _SearchPageState extends State<SearchPage> {
   String searchValue = '';
   User userData;
   final NumberFormat numberFormat = NumberFormat.compact();
-
   void searchUser(GithubApi githubApi, String searchValue, String category) {
     githubApi.fetchUserData(
       query: searchValue,
@@ -174,7 +173,8 @@ class _SearchPageState extends State<SearchPage> {
                             if (userData.reposUrl != null) {
                               try {
                                 await githubApi.fetchRepoData(
-                                    query: userData.reposUrl);
+                                  query: userData.reposUrl,
+                                );
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => RepoListPage(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_search/models/repo.dart';
 import 'package:github_search/models/user.dart';
 import 'package:github_search/services/github_api.dart';
@@ -104,33 +105,62 @@ class _RepoListPageState extends State<RepoListPage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(top: 0.0, bottom: 20.0),
-                      itemCount: repos.length,
-                      itemBuilder: (context, index) {
-                        Repo repo = repos[index];
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(51, 41, 64, 0.8),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1,
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollInfo) {
+                        if (!githubApi.isFetching &&
+                            scrollInfo.metrics.pixels ==
+                                scrollInfo.metrics.maxScrollExtent) {
+                          if (githubApi.currentPage <=
+                              (userData.publicRepos ~/ 30)) {
+                            githubApi.fetchNextRepoData(
+                                query: userData.reposUrl,
+                                page: githubApi.currentPage + 1);
+                          }
+                          return true;
+                        }
+                        return false;
+                      },
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(top: 0.0, bottom: 20.0),
+                        itemCount: repos.length,
+                        itemBuilder: (context, index) {
+                          Repo repo = repos[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(51, 41, 64, 0.8),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: ListTile(
+                                title: Text(repo.fullName),
+                                subtitle: Text(repo.description),
+                                onTap: () {
+                                  _launchURL(repo.htmlUrl);
+                                },
                               ),
                             ),
-                            child: ListTile(
-                              title: Text(repo.fullName),
-                              subtitle: Text(repo.description),
-                              onTap: () {
-                                _launchURL(repo.htmlUrl);
-                              },
-                            ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30.0),
+                    child: Container(
+                      height: githubApi.isFetching ? 50.0 : 0,
+                      color: Colors.transparent,
+                      child: Center(
+                        child: SpinKitChasingDots(
+                          color: Colors.white,
+                          size: 35,
+                        ),
+                      ),
                     ),
                   ),
                 ]),

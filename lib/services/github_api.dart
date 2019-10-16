@@ -13,6 +13,7 @@ class GithubApi with ChangeNotifier {
   bool _isFetching = false;
   bool _hasData = false;
   bool _hasRepoData = false;
+  int _currentPage = 1;
 
   bool get isFetching => _isFetching;
   String get getResponseText => _jsonResponse;
@@ -20,6 +21,7 @@ class GithubApi with ChangeNotifier {
   List<Repo> get getRepo => repos;
   bool get hasData => _hasData;
   bool get hasRepoData => _hasRepoData;
+  int get currentPage => _currentPage;
 
   Future<void> fetchUserData({String query, String category}) async {
     _isFetching = true;
@@ -38,9 +40,10 @@ class GithubApi with ChangeNotifier {
   Future<void> fetchRepoData({String query}) async {
     _isFetching = true;
     repos.clear();
+    _currentPage = 1;
     notifyListeners();
 
-    var response = await http.get(query);
+    var response = await http.get(query + '?page=1');
     _jsonResponse = response.body;
 
     if (_jsonResponse.isNotEmpty) {
@@ -53,5 +56,32 @@ class GithubApi with ChangeNotifier {
     _hasRepoData = true;
     _isFetching = false;
     notifyListeners();
+  }
+
+  Future<void> fetchNextRepoData({String query, int page}) async {
+    _isFetching = true;
+    notifyListeners();
+
+    var response = await http.get(query + '?page=' + page.toString());
+    _jsonResponse = response.body;
+
+    if (_jsonResponse.isNotEmpty) {
+      List<dynamic> json = jsonDecode(_jsonResponse);
+      for (int i = 0; i < json.length; ++i) {
+        Repo temp = Repo.fromJson(json[i]);
+        repos.add(temp);
+      }
+    }
+    _currentPage = page;
+    _hasRepoData = true;
+    _isFetching = false;
+    notifyListeners();
+  }
+
+  void clearData() {
+    _currentPage = 1;
+    _hasData = false;
+    _hasRepoData = false;
+    repos.clear();
   }
 }
