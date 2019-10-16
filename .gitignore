@@ -75,3 +75,4 @@ pubspec.lock
 .vscode/launch.json
 ios/Podfile.lock
 
+android/key.properties
