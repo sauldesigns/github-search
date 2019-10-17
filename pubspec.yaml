@@ -1,6 +1,6 @@
 name: github_search
 description: A simple github api based app.
-version: 1.0.1+2
+version: 1.0.2+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
