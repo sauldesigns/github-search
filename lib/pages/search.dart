@@ -33,6 +33,21 @@ class _SearchPageState extends State<SearchPage> {
     ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
     return Scaffold(
       backgroundColor: Color.fromRGBO(31, 26, 36, 1),
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(31, 26, 36, 1),
+        centerTitle: true,
+        elevation: 0.0,
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: FlatButton(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              onPressed: (){},
+              child: Text('Bookmarks'),
+            ),
+          )
+        ],
+      ),
       body: Center(
         child: ListView(
           shrinkWrap: true,

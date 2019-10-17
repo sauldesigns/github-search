@@ -23,8 +23,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Github Search',
         debugShowCheckedModeBanner: false,
-        theme:
-            ThemeData(primarySwatch: Colors.grey, brightness: Brightness.dark),
+        theme: ThemeData(
+          primarySwatch: Colors.grey,
+          brightness: Brightness.dark,
+        ),
         home: SearchPage(),
       ),
     );
