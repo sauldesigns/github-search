@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_search/models/repo.dart';
 import 'package:github_search/models/user.dart';
@@ -46,7 +47,7 @@ class _RepoListPageState extends State<RepoListPage> {
                 )
               : Column(children: [
                   Padding(
-                    padding: const EdgeInsets.only(
+                    padding: EdgeInsets.only(
                         top: 20.0, left: 40.0, right: 40.0, bottom: 20.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -122,7 +123,11 @@ class _RepoListPageState extends State<RepoListPage> {
                       },
                       child: ListView.builder(
                         shrinkWrap: true,
-                        padding: EdgeInsets.only(top: 0.0, bottom: 20.0),
+                        padding: EdgeInsets.only(
+                          top: 0.0,
+                          bottom: 10.0,
+                        ),
+                        physics: ScrollPhysics(),
                         itemCount: repos.length,
                         itemBuilder: (context, index) {
                           Repo repo = repos[index];
@@ -151,7 +156,9 @@ class _RepoListPageState extends State<RepoListPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 30.0),
+                    padding: EdgeInsets.only(
+                        bottom: Device.get().isIphoneX ? 15.0 : 0.0,
+                        top: Device.get().isIphoneX ? 10.0 : 0.0),
                     child: Container(
                       height: githubApi.isFetching ? 50.0 : 0,
                       color: Colors.transparent,

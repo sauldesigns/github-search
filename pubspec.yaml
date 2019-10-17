@@ -17,6 +17,7 @@ dependencies:
   connectivity: ^0.4.4
   url_launcher: ^5.1.4
   intl: ^0.16.0
+  flutter_device_type: ^0.2.0
   
   font_awesome_flutter: ^8.5.0
 
