@@ -14,6 +14,7 @@ class User {
   final String bio;
   final String blog;
   final int publicRepos;
+  final String message;
 
   User({
     this.username,
@@ -30,7 +31,8 @@ class User {
     this.name,
     this.company,
     this.blog,
-    this.publicRepos
+    this.publicRepos,
+    this.message,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ class User {
       blog: json['blog'] ?? '..',
       bio: json['bio'] ?? '...',
       publicRepos: json['public_repos'] ?? 0,
+      message: json['message'] ?? 'Error!',
     );
   }
 }

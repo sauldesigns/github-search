@@ -136,71 +136,74 @@ class _SearchPageState extends State<SearchPage> {
                 ? Padding(
                     padding: const EdgeInsets.all(50.0),
                     child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white12,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1,
+                      decoration: BoxDecoration(
+                        color: Colors.white12,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 1,
+                        ),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 5.0,
+                                  color: Colors.black87,
+                                  spreadRadius: 1,
+                                  offset: Offset(1, 2)),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(userData.avatar),
                           ),
                         ),
-                        child: ListTile(
-                          leading: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 5.0,
-                                    color: Colors.black87,
-                                    spreadRadius: 1,
-                                    offset: Offset(1, 2)),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(userData.avatar),
-                            ),
-                          ),
-                          title: Text(
-                            userData.username,
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          subtitle: Text(userData.bio +
-                              '\n' +
-                              '# of repositories: ' +
-                              numberFormat.format(userData.publicRepos)),
-                          enabled: connectivity == ConnectivityStatus.Offline
-                              ? false
-                              : true,
-                          onTap: () async {
-                            if (userData.reposUrl != null) {
-                              try {
-                                await githubApi.fetchRepoData(
-                                  query: userData.reposUrl,
-                                );
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => RepoListPage(),
-                                  ),
-                                );
-                              } catch (e) {
-                                print(e);
-                              }
-                            } else {
-                              Flushbar(
-                                flushbarPosition: FlushbarPosition.TOP,
-                                margin: EdgeInsets.all(8.0),
-                                borderRadius: 10,
-                                duration: Duration(seconds: 5),
-                                message: 'Error!',
-                                icon: Icon(
-                                  Icons.error,
-                                  color: Colors.red,
+                        title: Text(
+                          userData.username,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        subtitle: userData.message != 'Error!'
+                            ? Text(userData.message)
+                            : Text(userData.bio +
+                                '\n' +
+                                '# of repositories: ' +
+                                numberFormat.format(userData.publicRepos)),
+                        enabled: connectivity == ConnectivityStatus.Offline
+                            ? false
+                            : true,
+                        onTap: () async {
+                          if (userData.reposUrl != null) {
+                            try {
+                              await githubApi.fetchRepoData(
+                                query: userData.reposUrl,
+                              );
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => RepoListPage(),
                                 ),
-                              )..show(context);
+                              );
+                            } catch (e) {
+                              print(e);
                             }
-                          },
-                        )),
+                          } else {
+                            Flushbar(
+                              flushbarPosition: FlushbarPosition.TOP,
+                              margin: EdgeInsets.all(8.0),
+                              borderRadius: 10,
+                              duration: Duration(seconds: 5),
+                              message: userData.message,
+                              icon: Icon(
+                                Icons.error,
+                                color: Colors.red,
+                              ),
+                            )..show(context);
+                          }
+                        },
+                      ),
+                    ),
                   )
                 : Container(),
           ],
