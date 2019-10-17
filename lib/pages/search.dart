@@ -49,14 +49,13 @@ class _SearchPageState extends State<SearchPage> {
     ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     _darkTheme = (themeNotifier.getTheme() == darkTheme);
-   
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         brightness: Theme.of(context).brightness,
         centerTitle: true,
-        elevation: 0.0,
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -132,11 +131,8 @@ class _SearchPageState extends State<SearchPage> {
                           ? false
                           : true,
                       autofocus: false,
-                      cursorColor: Colors.white,
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
+                      cursorColor: Theme.of(context).cursorColor,
+                      style: Theme.of(context).textTheme.title,
                       autocorrect: false,
                       textAlign: TextAlign.center,
                       decoration: InputDecoration(
@@ -144,13 +140,12 @@ class _SearchPageState extends State<SearchPage> {
                           suffixIcon: IconButton(
                             icon: githubApi.isFetching == true
                                 ? SpinKitChasingDots(
-                                    color: Colors.white,
+                                    color: Theme.of(context).cursorColor,
                                     size: 25,
                                   )
                                 : Icon(Icons.check_circle),
-                            color: searchValue == ''
-                                ? Colors.white24
-                                : Colors.greenAccent,
+                            color:
+                                searchValue == '' ? Colors.grey : Colors.green,
                             splashColor: Colors.transparent,
                             onPressed:
                                 connectivity == ConnectivityStatus.Offline
@@ -251,16 +246,16 @@ class _SearchPageState extends State<SearchPage> {
                         onLongPress: () async {
                           DBProvider.db.newClient(githubApi.user);
                           Flushbar(
-                              flushbarPosition: FlushbarPosition.TOP,
-                              margin: EdgeInsets.all(8.0),
-                              borderRadius: 10,
-                              duration: Duration(seconds: 3),
-                              message: 'User has been added to bookmarks',
-                              icon: Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                              ),
-                            )..show(context);
+                            flushbarPosition: FlushbarPosition.TOP,
+                            margin: EdgeInsets.all(8.0),
+                            borderRadius: 10,
+                            duration: Duration(seconds: 3),
+                            message: 'User has been added to bookmarks',
+                            icon: Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                            ),
+                          )..show(context);
                         },
                       ),
                     ),

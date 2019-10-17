@@ -9,6 +9,13 @@ final darkTheme = ThemeData(
   dialogBackgroundColor: Color.fromRGBO(51, 41, 64, 1),
   cardColor: Colors.white12,
   accentColor: Colors.white,
+  cursorColor: Colors.white,
+  textTheme: TextTheme(
+    title: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+    ),
+  ),
   accentIconTheme: IconThemeData(color: Colors.black),
   dividerColor: Colors.black12,
 );
@@ -17,10 +24,17 @@ final lightTheme = ThemeData(
   primarySwatch: Colors.grey,
   primaryColor: Colors.white,
   scaffoldBackgroundColor: Colors.white,
+  textTheme: TextTheme(
+    title: TextStyle(
+      color: Colors.black,
+      fontSize: 20,
+    ),
+  ),
+  cursorColor: Colors.black,
   brightness: Brightness.light,
   backgroundColor: const Color(0xFFE5E5E5),
-  cardColor: Colors.orangeAccent,
-  dialogBackgroundColor: Colors.black38,
+  cardColor: Colors.white,
+  dialogBackgroundColor: Colors.white,
   accentColor: Colors.black,
   accentIconTheme: IconThemeData(color: Colors.white),
   dividerColor: Colors.white54,

@@ -24,7 +24,6 @@ class _BookmarksPageState extends State<BookmarksPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0.0,
         centerTitle: true,
         title: Text('Bookmarks'),
       ),
@@ -65,8 +64,9 @@ class _BookmarksPageState extends State<BookmarksPage> {
                             '\n' +
                             '# of repositories: ' +
                             numberFormat.format(userData.publicRepos)),
-                    enabled:
-                        connectivity == ConnectivityStatus.Offline ? false : true,
+                    enabled: connectivity == ConnectivityStatus.Offline
+                        ? false
+                        : true,
                     onTap: () async {
                       if (userData.reposUrl != null) {
                         try {
