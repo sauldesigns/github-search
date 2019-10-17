@@ -22,7 +22,7 @@ The app uses an easy to use UI so that only prompts the user to enter a username
   - On the repo page simply long press the user avatar until popup appears. 
 
 ### Database
-  - Powered By SQL
+  - Powered By SQLite
 
 
 ### API
