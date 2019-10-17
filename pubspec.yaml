@@ -1,6 +1,6 @@
 name: github_search
 description: A simple github api based app.
-version: 2.0.0+1
+version: 3.0.1+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -18,8 +18,9 @@ dependencies:
   url_launcher: ^5.1.4
   intl: ^0.16.0
   flutter_device_type: ^0.2.0
-  
   font_awesome_flutter: ^8.5.0
+  sqflite:
+  path:
 
 dev_dependencies:
   flutter_test:
