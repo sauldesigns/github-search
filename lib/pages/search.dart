@@ -6,8 +6,11 @@ import 'package:github_search/enums/connectivity.dart';
 import 'package:github_search/models/user.dart';
 import 'package:github_search/pages/repo.dart';
 import 'package:github_search/services/github_api.dart';
+import 'package:github_search/services/nightmode.dart';
+import 'package:github_search/services/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key key}) : super(key: key);
@@ -18,7 +21,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   String searchValue = '';
   User userData;
+  var _darkTheme = true;
   final NumberFormat numberFormat = NumberFormat.compact();
+  
   void searchUser(GithubApi githubApi, String searchValue, String category) {
     githubApi.fetchUserData(
       query: searchValue,
@@ -26,23 +31,39 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  void onThemeChanged(bool value, ThemeNotifier themeNotifier) async {
+    (value)
+        ? themeNotifier.setTheme(darkTheme)
+        : themeNotifier.setTheme(lightTheme);
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setBool('darkMode', value);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     GithubApi githubApi = Provider.of<GithubApi>(context);
     User userData = githubApi.getUser;
     ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    _darkTheme = (themeNotifier.getTheme() == darkTheme);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(31, 26, 36, 1),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(31, 26, 36, 1),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        brightness: Theme.of(context).brightness,
         centerTitle: true,
         elevation: 0.0,
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: FlatButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              onPressed: (){},
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              onPressed: () {
+                
+               
+              },
               child: Text('Bookmarks'),
             ),
           )
@@ -56,9 +77,16 @@ class _SearchPageState extends State<SearchPage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Center(
-                child: Icon(
-                  FontAwesomeIcons.github,
-                  size: 80,
+                child: GestureDetector(
+                  onDoubleTap: () {
+                    print('when');
+                    // usertheme.userThemeMode(MyThemes.lightTheme);
+                     onThemeChanged(!_darkTheme, themeNotifier);
+                  },
+                  child: Icon(
+                    FontAwesomeIcons.github,
+                    size: 80,
+                  ),
                 ),
               ),
             ),
@@ -87,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
               child: Center(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(51, 41, 64, 1),
+                    color: Theme.of(context).dialogBackgroundColor,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: Colors.black,
@@ -152,7 +180,7 @@ class _SearchPageState extends State<SearchPage> {
                     padding: const EdgeInsets.all(50.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.white12,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: Colors.black,
@@ -165,10 +193,10 @@ class _SearchPageState extends State<SearchPage> {
                             borderRadius: BorderRadius.circular(50),
                             boxShadow: [
                               BoxShadow(
-                                  blurRadius: 5.0,
-                                  color: Colors.black87,
+                                   blurRadius: 5.0,
+                                  color: Colors.black45,
                                   spreadRadius: 1,
-                                  offset: Offset(1, 2)),
+                                  offset: Offset(1, 3)),
                             ],
                           ),
                           child: CircleAvatar(
@@ -227,3 +255,4 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+

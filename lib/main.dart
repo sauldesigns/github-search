@@ -3,9 +3,15 @@ import 'package:github_search/enums/connectivity.dart';
 import 'package:github_search/pages/search.dart';
 import 'package:github_search/services/connectivity.dart';
 import 'package:github_search/services/github_api.dart';
+import 'package:github_search/services/nightmode.dart';
+import 'package:github_search/services/theme.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  runApp(
+    MyApp(),
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -19,16 +25,30 @@ class MyApp extends StatelessWidget {
           builder: (context) =>
               ConnectivityService().connectionStatusController,
         ),
-      ],
-      child: MaterialApp(
-        title: 'Github Search',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.grey,
-          brightness: Brightness.dark,
+        ChangeNotifierProvider<ThemeNotifier>(
+          builder: (_) => ThemeNotifier(darkTheme),
         ),
-        home: SearchPage(),
-      ),
+      ],
+      child: MainWidget(),
+    );
+  }
+}
+
+class MainWidget extends StatelessWidget {
+  const MainWidget({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeNotifier usertheme = Provider.of<ThemeNotifier>(context);
+    return MaterialApp(
+      title: 'Github Search',
+      debugShowCheckedModeBanner: false,
+      theme: usertheme.getTheme(),
+      // theme: ThemeData(
+      //   primarySwatch: Colors.grey,
+      //   brightness: Brightness.dark,
+      // ),
+      home: SearchPage(),
     );
   }
 }

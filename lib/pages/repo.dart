@@ -30,9 +30,9 @@ class _RepoListPageState extends State<RepoListPage> {
     }
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(31, 26, 36, 1),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
         title: Text('Repos'),
       ),
@@ -58,10 +58,10 @@ class _RepoListPageState extends State<RepoListPage> {
                             borderRadius: BorderRadius.circular(50),
                             boxShadow: [
                               BoxShadow(
-                                  blurRadius: 10.0,
-                                  color: Colors.black87,
-                                  spreadRadius: 3,
-                                  offset: Offset(1, 2)),
+                                  blurRadius: 5.0,
+                                  color: Colors.black45,
+                                  spreadRadius: 1,
+                                  offset: Offset(1, 3)),
                             ],
                           ),
                           child: InkWell(
@@ -135,7 +135,7 @@ class _RepoListPageState extends State<RepoListPage> {
                             padding: const EdgeInsets.all(10.0),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(51, 41, 64, 0.8),
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
                                   color: Colors.black,

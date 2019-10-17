@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 
-enum MyThemeKeys { LIGHT, DARK, DARKER }
+final darkTheme = ThemeData(
+  primarySwatch: Colors.grey,
+  primaryColor: Colors.black,
+  scaffoldBackgroundColor: Color.fromRGBO(31, 26, 36, 1),
+  brightness: Brightness.dark,
+  backgroundColor: const Color(0xFF212121),
+  dialogBackgroundColor: Color.fromRGBO(51, 41, 64, 1),
+  cardColor: Colors.white12,
+  accentColor: Colors.white,
+  accentIconTheme: IconThemeData(color: Colors.black),
+  dividerColor: Colors.black12,
+);
 
-class MyThemes {
-  static final ThemeData lightTheme = ThemeData(
-    primaryColor: Colors.blue,
-    brightness: Brightness.light,
-  );
-
-  static final ThemeData darkTheme = ThemeData(
-    primaryColor: Colors.grey,
-    brightness: Brightness.dark,
-  );
-
-  static final ThemeData darkerTheme = ThemeData(
-    primaryColor: Colors.black,
-    brightness: Brightness.dark,
-  );
-
-  static ThemeData getThemeFromKey(MyThemeKeys themeKey) {
-    switch (themeKey) {
-      case MyThemeKeys.LIGHT:
-        return lightTheme;
-      case MyThemeKeys.DARK:
-        return darkTheme;
-      case MyThemeKeys.DARKER:
-        return darkerTheme;
-      default:
-        return darkTheme;
-    }
-  }
-}
+final lightTheme = ThemeData(
+  primarySwatch: Colors.grey,
+  primaryColor: Colors.white,
+  scaffoldBackgroundColor: Colors.white,
+  brightness: Brightness.light,
+  backgroundColor: const Color(0xFFE5E5E5),
+  cardColor: Colors.orangeAccent,
+  dialogBackgroundColor: Colors.black38,
+  accentColor: Colors.black,
+  accentIconTheme: IconThemeData(color: Colors.white),
+  dividerColor: Colors.white54,
+);
