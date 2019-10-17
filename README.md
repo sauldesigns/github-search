@@ -17,8 +17,12 @@ The app uses an easy to use UI so that only prompts the user to enter a username
     - This will search for user's github username and return information of the user if the user exist underneath the search bar. 
   - Click on the user view the user's public repositories. 
 
+### How to Add Users to Bookmarks
+  - On initial homepage when searching a user, once user has populate under the search tab. Simply long press the user box until popup appears. 
+  - On the repo page simply long press the user avatar until popup appears. 
+
 ### Database
-  - Powered By SQL (Currently not implemented)
+  - Powered By SQL
 
 
 ### API
@@ -48,8 +52,7 @@ Application in progress of being uploaded to both the iOS and Android App store.
 ### Todos
   - Write MORE Tests
   - Add smoother transitions/animations. 
-  - Add SQL database 
-  - Feature to bookmark users or repos
+  - Feature to bookmark users or repos (almost complete)
   - Add more features
 
 
