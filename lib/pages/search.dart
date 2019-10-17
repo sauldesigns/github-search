@@ -169,6 +169,9 @@ class _SearchPageState extends State<SearchPage> {
                               '\n' +
                               '# of repositories: ' +
                               numberFormat.format(userData.publicRepos)),
+                          enabled: connectivity == ConnectivityStatus.Offline
+                              ? false
+                              : true,
                           onTap: () async {
                             if (userData.reposUrl != null) {
                               try {
