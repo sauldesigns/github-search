@@ -15,8 +15,10 @@ class User {
   final String blog;
   final int publicRepos;
   final String message;
+  final int id;
 
   User({
+    this.id,
     this.username,
     this.avatar,
     this.htmlUrl,
@@ -37,6 +39,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      id: json['id'] ?? 0,
       username: json['login'] ?? 'Error loading data',
       avatar: json['avatar_url'] ?? 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png',
       htmlUrl: json['html_url'],
@@ -55,4 +58,23 @@ class User {
       message: json['message'] ?? 'Error!',
     );
   }
+
+  Map<String, dynamic> toMap() => {
+      'id': id,
+      'username': username,
+      'avatar': avatar,
+      'htmlUrl': htmlUrl,
+      'followersUrl': followersUrl,
+      'followingUrl': followingUrl,
+      'starredUrl': starredUrl,
+      'subscriptionUrl': subscriptionUrl,
+      'organizationsUrl': organizationsUrl,
+      'reposUrl': reposUrl,
+      'eventsUrl': eventsUrl,
+      'name': name,
+      'company': company,
+      'blog': blog,
+      'bio': bio,
+      'publicRepos': publicRepos,
+      };
 }

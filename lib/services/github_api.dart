@@ -37,6 +37,11 @@ class GithubApi with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setUser(User userData) async {
+    user = userData;
+    notifyListeners();
+  }
+
   Future<void> fetchRepoData({String query}) async {
     _isFetching = true;
     repos.clear();

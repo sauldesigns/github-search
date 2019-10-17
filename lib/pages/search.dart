@@ -4,9 +4,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:github_search/enums/connectivity.dart';
 import 'package:github_search/models/user.dart';
+import 'package:github_search/pages/bookmarks.dart';
 import 'package:github_search/pages/repo.dart';
 import 'package:github_search/services/github_api.dart';
 import 'package:github_search/services/nightmode.dart';
+import 'package:github_search/services/sql_db.dart';
 import 'package:github_search/services/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +24,9 @@ class _SearchPageState extends State<SearchPage> {
   String searchValue = '';
   User userData;
   var _darkTheme = true;
+  DBProvider db;
   final NumberFormat numberFormat = NumberFormat.compact();
-  
+
   void searchUser(GithubApi githubApi, String searchValue, String category) {
     githubApi.fetchUserData(
       query: searchValue,
@@ -39,7 +42,6 @@ class _SearchPageState extends State<SearchPage> {
     prefs.setBool('darkMode', value);
   }
 
-
   @override
   Widget build(BuildContext context) {
     GithubApi githubApi = Provider.of<GithubApi>(context);
@@ -47,6 +49,7 @@ class _SearchPageState extends State<SearchPage> {
     ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     _darkTheme = (themeNotifier.getTheme() == darkTheme);
+   
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -61,8 +64,8 @@ class _SearchPageState extends State<SearchPage> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               onPressed: () {
-                
-               
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => BookmarksPage()));
               },
               child: Text('Bookmarks'),
             ),
@@ -81,7 +84,7 @@ class _SearchPageState extends State<SearchPage> {
                   onDoubleTap: () {
                     print('when');
                     // usertheme.userThemeMode(MyThemes.lightTheme);
-                     onThemeChanged(!_darkTheme, themeNotifier);
+                    onThemeChanged(!_darkTheme, themeNotifier);
                   },
                   child: Icon(
                     FontAwesomeIcons.github,
@@ -193,7 +196,7 @@ class _SearchPageState extends State<SearchPage> {
                             borderRadius: BorderRadius.circular(50),
                             boxShadow: [
                               BoxShadow(
-                                   blurRadius: 5.0,
+                                  blurRadius: 5.0,
                                   color: Colors.black45,
                                   spreadRadius: 1,
                                   offset: Offset(1, 3)),
@@ -245,6 +248,20 @@ class _SearchPageState extends State<SearchPage> {
                             )..show(context);
                           }
                         },
+                        onLongPress: () async {
+                          DBProvider.db.newClient(githubApi.user);
+                          Flushbar(
+                              flushbarPosition: FlushbarPosition.TOP,
+                              margin: EdgeInsets.all(8.0),
+                              borderRadius: 10,
+                              duration: Duration(seconds: 3),
+                              message: 'User has been added to bookmarks',
+                              icon: Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              ),
+                            )..show(context);
+                        },
                       ),
                     ),
                   )
@@ -255,4 +272,3 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
-

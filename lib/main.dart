@@ -7,11 +7,7 @@ import 'package:github_search/services/nightmode.dart';
 import 'package:github_search/services/theme.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
-  runApp(
-    MyApp(),
-  );
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
