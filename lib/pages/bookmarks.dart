@@ -202,7 +202,7 @@ class CardData extends StatelessWidget {
               print(e);
             }
           } else if (repoData != null) {
-            _launchURL(repoData.repoUrl);
+            _launchURL(repoData.htmlUrl);
           } else {
             Flushbar(
               flushbarPosition: FlushbarPosition.TOP,
