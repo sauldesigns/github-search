@@ -1,9 +1,11 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_search/models/repo.dart';
 import 'package:github_search/models/user.dart';
 import 'package:github_search/services/github_api.dart';
+import 'package:github_search/services/sql_db.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -34,6 +36,7 @@ class _RepoListPageState extends State<RepoListPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         centerTitle: true,
+        elevation: 0.0,
         title: Text('Repos'),
       ),
       body: repos == null
@@ -71,10 +74,19 @@ class _RepoListPageState extends State<RepoListPage> {
                             onTap: () {
                               _launchURL(userData.htmlUrl);
                             },
-                            onTapDown: (_) {
-                              setState(() {
-                                avatarRadius = 50;
-                              });
+                            onLongPress: () {
+                              DBProvider.db.newClient(userData);
+                              Flushbar(
+                                flushbarPosition: FlushbarPosition.TOP,
+                                margin: EdgeInsets.all(8.0),
+                                borderRadius: 10,
+                                duration: Duration(seconds: 3),
+                                message: 'User has been added to bookmarks',
+                                icon: Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                ),
+                              )..show(context);
                             },
                             child: CircleAvatar(
                               radius: avatarRadius,
@@ -147,6 +159,20 @@ class _RepoListPageState extends State<RepoListPage> {
                                 subtitle: Text(repo.description),
                                 onTap: () {
                                   _launchURL(repo.htmlUrl);
+                                },
+                                onLongPress: () {
+                                  DBProvider.db.newRepo(repo);
+                                  Flushbar(
+                                    flushbarPosition: FlushbarPosition.TOP,
+                                    margin: EdgeInsets.all(8.0),
+                                    borderRadius: 10,
+                                    duration: Duration(seconds: 3),
+                                    message: 'Repo has been added to bookmarks',
+                                    icon: Icon(
+                                      Icons.check_circle,
+                                      color: Colors.green,
+                                    ),
+                                  )..show(context);
                                 },
                               ),
                             ),

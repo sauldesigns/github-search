@@ -6,10 +6,20 @@ import 'package:github_search/services/github_api.dart';
 import 'package:github_search/services/nightmode.dart';
 import 'package:github_search/services/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.getInstance().then((prefs) {
+    var darkModeOn = prefs.getBool('darkMode');
+    runApp(MyApp(darkmode: darkModeOn));
+  });
+}
 
 class MyApp extends StatelessWidget {
+  final bool darkmode;
+  MyApp({this.darkmode});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -22,7 +32,7 @@ class MyApp extends StatelessWidget {
               ConnectivityService().connectionStatusController,
         ),
         ChangeNotifierProvider<ThemeNotifier>(
-          builder: (_) => ThemeNotifier(darkTheme),
+          builder: (_) => ThemeNotifier(darkmode ? darkTheme : lightTheme),
         ),
       ],
       child: MainWidget(),

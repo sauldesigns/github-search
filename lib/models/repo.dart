@@ -13,8 +13,10 @@ class Repo {
   final String cloneUrl;
   final int forksCount;
   final int watchers;
+  final int id;
 
   Repo({
+    this.id,
     this.name,
     this.fullName,
     this.htmlUrl,
@@ -33,6 +35,7 @@ class Repo {
 
   factory Repo.fromJson(Map<String, dynamic> json) {
     return Repo(
+      id: json['id'],
       name: json['name'] ?? '...',
       fullName: json['full_name'] ?? '...',
       htmlUrl: json['html_url'],
@@ -49,4 +52,24 @@ class Repo {
       watchers: json['watchers'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toMap() => {
+      'id': id,
+      'name': name,
+      'full_name': fullName,
+      'html_url': htmlUrl,
+      'description': description,
+      'url': repoUrl,
+      'commits_url': commitsUrl,
+      'created_at': createdAt,
+      'pushed_at': pushedAt,
+      'updated_at': updatedAt,
+      'git_url': gitUrl,
+      'clone_url': cloneUrl,
+      'ssh_url': sshUrl,
+      'forks_count': forksCount,
+      'watchers': watchers,
+      };
+
+
 }

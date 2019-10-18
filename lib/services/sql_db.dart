@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:github_search/models/repo.dart';
 import 'package:github_search/models/user.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,31 +22,72 @@ class DBProvider {
     return _database;
   }
 
+  void createUserTable(Batch batch) {
+    batch.execute("CREATE TABLE User ("
+        "id INTEGER PRIMARY KEY,"
+        "login TEXT,"
+        "avatar_url TEXT,"
+        "html_url TEXT,"
+        "followers_url TEXT,"
+        "following_url TEXT,"
+        "starred_url TEXT,"
+        "subscriptions_url TEXT,"
+        "organizations_url TEXT,"
+        "repos_url TEXT,"
+        "events_url TEXT,"
+        "name TEXT,"
+        "company TEXT,"
+        "bio TEXT,"
+        "blog TEXT,"
+        "public_repos INTEGER,"
+        "UNIQUE(id)"
+        ")");
+  }
+
+  void createRepoTable(Batch batch) {
+    batch.execute("CREATE TABLE Repo ("
+        "id INTEGER PRIMARY KEY,"
+        "name TEXT,"
+        "full_name TEXT,"
+        "html_url TEXT,"
+        "description TEXT,"
+        "url TEXT,"
+        "commits_url TEXT,"
+        "created_at TEXT,"
+        "pushed_at TEXT,"
+        "updated_at TEXT,"
+        "git_url TEXT,"
+        "clone_url TEXT,"
+        "ssh_url TEXT,"
+        "forks_count INTEGER,"
+        "watchers INTEGER,"
+        "UNIQUE(id)"
+        ")");
+  }
+
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "ghsearch3.db");
-    return await openDatabase(path, version: 1, onOpen: (db) {},
-        onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE User ("
-          "id INTEGER PRIMARY KEY,"
-          "login TEXT,"
-          "avatar_url TEXT,"
-          "html_url TEXT,"
-          "followers_url TEXT,"
-          "following_url TEXT,"
-          "starred_url TEXT,"
-          "subscriptions_url TEXT,"
-          "organizations_url TEXT,"
-          "repos_url TEXT,"
-          "events_url TEXT,"
-          "name TEXT,"
-          "company TEXT,"
-          "bio TEXT,"
-          "blog TEXT,"
-          "public_repos INTEGER,"
-          "UNIQUE(id)"
-          ")");
-    });
+    String path = join(documentsDirectory.path, "ghsearch4.db");
+    return await openDatabase(
+      path,
+      version: 4,
+      onOpen: (db) {},
+      onCreate: (Database db, int version) async {
+        var batch = db.batch();
+        createUserTable(batch);
+        createRepoTable(batch);
+        await batch.commit();
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        var batch = db.batch();
+        if (oldVersion == 2) {
+          createUserTable(batch);
+          createRepoTable(batch);
+        }
+        await batch.commit();
+      },
+      onDowngrade: onDatabaseDowngradeDelete,
+    );
   }
 
   newClient(User newClient) async {
@@ -78,6 +120,35 @@ class DBProvider {
     return raw;
   }
 
+  newRepo(Repo newRepo) async {
+    final db = await database;
+    //get the biggest id in the table
+
+    //insert to the table using the new id
+    var raw = await db.rawInsert(
+        "INSERT OR IGNORE Into Repo (id,name,full_name,html_url,description,url,"
+        "commits_url,created_at,pushed_at,updated_at,git_url,clone_url,ssh_url,forks_count,watchers)"
+        " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        [
+          newRepo.id,
+          newRepo.name,
+          newRepo.fullName,
+          newRepo.htmlUrl,
+          newRepo.description,
+          newRepo.repoUrl,
+          newRepo.commitsUrl,
+          newRepo.createdAt,
+          newRepo.pushedAt,
+          newRepo.updatedAt,
+          newRepo.gitUrl,
+          newRepo.cloneUrl,
+          newRepo.sshUrl,
+          newRepo.forksCount,
+          newRepo.watchers,
+        ]);
+    return raw;
+  }
+
   updateClient(User newClient) async {
     final db = await database;
     var res = await db.update("User", newClient.toMap(),
@@ -99,6 +170,14 @@ class DBProvider {
     return list;
   }
 
+  Future<List<Repo>> getAllRepos() async {
+    final db = await database;
+    var res = await db.query("Repo");
+    List<Repo> list =
+        res.isNotEmpty ? res.map((c) => Repo.fromJson(c)).toList() : [];
+    return list;
+  }
+
   deleteClient(int id) async {
     final db = await database;
     return db.delete("User", where: "id = ?", whereArgs: [id]);
@@ -107,5 +186,6 @@ class DBProvider {
   deleteAll() async {
     final db = await database;
     db.rawDelete("Delete * from User");
+    db.rawDelete("Delete * from Repo");
   }
 }

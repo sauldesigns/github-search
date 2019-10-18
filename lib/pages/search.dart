@@ -43,19 +43,25 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    DBProvider.db.initDB();
+  }
+
+  @override
   Widget build(BuildContext context) {
     GithubApi githubApi = Provider.of<GithubApi>(context);
     User userData = githubApi.getUser;
     ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     _darkTheme = (themeNotifier.getTheme() == darkTheme);
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         brightness: Theme.of(context).brightness,
         centerTitle: true,
+        elevation: 0.0,
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -81,8 +87,6 @@ class _SearchPageState extends State<SearchPage> {
               child: Center(
                 child: GestureDetector(
                   onDoubleTap: () {
-                    print('when');
-                    // usertheme.userThemeMode(MyThemes.lightTheme);
                     onThemeChanged(!_darkTheme, themeNotifier);
                   },
                   child: Icon(
@@ -138,6 +142,7 @@ class _SearchPageState extends State<SearchPage> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           suffixIcon: IconButton(
+                            highlightColor: Colors.transparent,
                             icon: githubApi.isFetching == true
                                 ? SpinKitChasingDots(
                                     color: Theme.of(context).cursorColor,
