@@ -10,6 +10,7 @@ import 'package:github_search/services/github_api.dart';
 import 'package:github_search/services/sql_db.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BookmarksPage extends StatefulWidget {
   BookmarksPage({Key key}) : super(key: key);
@@ -138,12 +139,19 @@ class CardData extends StatelessWidget {
   final Repo repoData;
   final bool isUser;
 
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('error');
+    }
+  }
+
   CardData({this.userData, this.repoData, this.isUser});
   @override
   Widget build(BuildContext context) {
     GithubApi githubApi = Provider.of<GithubApi>(context);
     ConnectivityStatus connectivity = Provider.of<ConnectivityStatus>(context);
-    print(repoData);
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: ListTile(
@@ -179,7 +187,7 @@ class CardData extends StatelessWidget {
             : Text(repoData.description),
         enabled: connectivity == ConnectivityStatus.Offline ? false : true,
         onTap: () async {
-          if (userData.reposUrl != null) {
+          if (userData != null) {
             try {
               await githubApi.setUser(userData);
               await githubApi.fetchRepoData(
@@ -193,6 +201,8 @@ class CardData extends StatelessWidget {
             } catch (e) {
               print(e);
             }
+          } else if (repoData != null) {
+            _launchURL(repoData.repoUrl);
           } else {
             Flushbar(
               flushbarPosition: FlushbarPosition.TOP,
