@@ -22,6 +22,11 @@ class _BookmarksPageState extends State<BookmarksPage> {
   PageController _pageController = PageController();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     int _page = 0;
 
@@ -68,7 +73,7 @@ class BookmarksList extends StatelessWidget {
   final Future<List<User>> queryUser;
   final Future<List<Repo>> queryRepo;
   final bool isUser;
-  BookmarksList({Key key, this.queryUser, this.queryRepo, this.isUser})
+  BookmarksList({Key key, this.queryUser, this.queryRepo, this.isUser = true})
       : super(key: key);
 
   @override
@@ -147,7 +152,7 @@ class CardData extends StatelessWidget {
     }
   }
 
-  CardData({this.userData, this.repoData, this.isUser});
+  CardData({this.userData, this.repoData, this.isUser = true});
   @override
   Widget build(BuildContext context) {
     GithubApi githubApi = Provider.of<GithubApi>(context);

@@ -11,14 +11,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.getInstance().then((prefs) {
-    var darkModeOn = prefs.getBool('darkMode');
+    bool darkModeOn = prefs.getBool('darkMode');
     runApp(MyApp(darkmode: darkModeOn));
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  MyApp({Key key, this.darkmode}) : super(key: key);
   final bool darkmode;
-  MyApp({this.darkmode});
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool darkmode = true;
+  @override
+  void initState() {
+    super.initState();
+    darkmode = widget.darkmode ?? true;
+  }
 
   @override
   Widget build(BuildContext context) {
