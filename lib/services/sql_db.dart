@@ -183,6 +183,11 @@ class DBProvider {
     return db.delete("User", where: "id = ?", whereArgs: [id]);
   }
 
+  deleteRepo(int id) async {
+    final db = await database;
+    return db.delete("User", where: "id = ?", whereArgs: [id]);
+  }
+
   deleteAll() async {
     final db = await database;
     db.rawDelete("Delete * from User");
