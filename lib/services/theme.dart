@@ -6,7 +6,7 @@ final darkTheme = ThemeData(
   scaffoldBackgroundColor: Colors.black, // Color.fromRGBO(31, 26, 36, 1),
   brightness: Brightness.dark,
   backgroundColor: const Color(0xFF212121),
-  dialogBackgroundColor: Color.fromRGBO(51, 41, 64, 1),
+  dialogBackgroundColor: Colors.white10,// Color.fromRGBO(51, 41, 64, 1),
   cardColor: Colors.white12,
   accentColor: Colors.white,
   cursorColor: Colors.white,
