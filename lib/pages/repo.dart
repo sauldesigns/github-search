@@ -187,10 +187,10 @@ class _RepoListPageState extends State<RepoListPage> {
                         top: Device.get().isIphoneX ? 10.0 : 0.0),
                     child: Container(
                       height: githubApi.isFetching ? 50.0 : 0,
-                      color: Colors.transparent,
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       child: Center(
                         child: SpinKitChasingDots(
-                          color: Colors.white,
+                          color: Theme.of(context).toggleableActiveColor,
                           size: 35,
                         ),
                       ),

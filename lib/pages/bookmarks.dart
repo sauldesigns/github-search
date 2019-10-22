@@ -39,15 +39,20 @@ class _BookmarksPageState extends State<BookmarksPage> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        color: Colors.black26,
+        color: Theme.of(context).toggleableActiveColor,
         animationDuration: Duration(milliseconds: 300),
         index: _page,
         items: <Widget>[
           Icon(
             Icons.person,
             size: 30,
+            color: Theme.of(context).splashColor,
           ),
-          Icon(FontAwesomeIcons.githubAlt, size: 30),
+          Icon(
+            FontAwesomeIcons.githubAlt,
+            size: 30,
+            color: Theme.of(context).splashColor,
+          ),
         ],
         onTap: (index) {
           _pageController.animateToPage(index,
