@@ -60,10 +60,6 @@ class MainWidget extends StatelessWidget {
       title: 'Github Search',
       debugShowCheckedModeBanner: false,
       theme: usertheme.getTheme(),
-      // theme: ThemeData(
-      //   primarySwatch: Colors.grey,
-      //   brightness: Brightness.dark,
-      // ),
       home: SearchPage(),
     );
   }

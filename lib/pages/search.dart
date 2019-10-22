@@ -26,7 +26,6 @@ class _SearchPageState extends State<SearchPage> {
   var _darkTheme = true;
   DBProvider db;
   final NumberFormat numberFormat = NumberFormat.compact();
-
   void searchUser(GithubApi githubApi, String searchValue, String category) {
     githubApi.fetchUserData(
       query: searchValue,
@@ -82,28 +81,10 @@ class _SearchPageState extends State<SearchPage> {
           shrinkWrap: true,
           physics: ScrollPhysics(),
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Center(
-                child: GestureDetector(
-                  onDoubleTap: () {
-                    onThemeChanged(!_darkTheme, themeNotifier);
-                  },
-                  child: Icon(
-                    FontAwesomeIcons.github,
-                    size: 80,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
-              child: Center(
-                child: Text(
-                  'Search',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+            LogoWidget(
+              darkTheme: _darkTheme,
+              themeNotifier: themeNotifier,
+              onThemeChanged: onThemeChanged,
             ),
             connectivity == ConnectivityStatus.Offline
                 ? Padding(
@@ -116,159 +97,229 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   )
                 : Container(),
-            Padding(
-              padding: const EdgeInsets.only(left: 50.0, right: 50.0),
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).dialogBackgroundColor,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: TextField(
-                      enabled: connectivity == ConnectivityStatus.Offline
-                          ? false
-                          : true,
-                      autofocus: false,
-                      cursorColor: Theme.of(context).cursorColor,
-                      style: Theme.of(context).textTheme.title,
-                      autocorrect: false,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          suffixIcon: IconButton(
-                            highlightColor: Colors.transparent,
-                            icon: githubApi.isFetching == true
-                                ? SpinKitChasingDots(
-                                    color: Theme.of(context).cursorColor,
-                                    size: 25,
-                                  )
-                                : Icon(Icons.check_circle),
-                            color:
-                                searchValue == '' ? Colors.grey : Colors.green,
-                            splashColor: Colors.transparent,
-                            onPressed:
-                                connectivity == ConnectivityStatus.Offline
-                                    ? null
-                                    : () {
-                                        if (searchValue != '') {
-                                          searchUser(
-                                              githubApi, searchValue, 'users');
-                                        }
-                                      },
-                          ),
-                          hintText: 'Search username'),
-                      onChanged: (value) {
-                        setState(() {
-                          searchValue = value;
-                        });
-                      },
-                      onSubmitted: (_) {
-                        if (searchValue != '') {
-                          searchUser(githubApi, searchValue, 'users');
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ),
+            SearchBar(
+              connectivity: connectivity,
+              githubApi: githubApi,
             ),
             (githubApi.hasData == true && githubApi.isFetching == false)
-                ? Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1,
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 5.0,
-                                  color: Colors.black45,
-                                  spreadRadius: 1,
-                                  offset: Offset(1, 3)),
-                            ],
-                          ),
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage(userData.avatar),
-                          ),
-                        ),
-                        title: Text(
-                          userData.username,
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        subtitle: userData.message != 'Error!'
-                            ? Text(userData.message)
-                            : Text(userData.bio +
-                                '\n' +
-                                '# of repositories: ' +
-                                numberFormat.format(userData.publicRepos)),
-                        enabled: connectivity == ConnectivityStatus.Offline
-                            ? false
-                            : true,
-                        onTap: () async {
-                          if (userData.reposUrl != null) {
-                            try {
-                              await githubApi.fetchRepoData(
-                                query: userData.reposUrl,
-                              );
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => RepoListPage(),
-                                ),
-                              );
-                            } catch (e) {
-                              print(e);
-                            }
-                          } else {
-                            Flushbar(
-                              flushbarPosition: FlushbarPosition.TOP,
-                              margin: EdgeInsets.all(8.0),
-                              borderRadius: 10,
-                              duration: Duration(seconds: 5),
-                              message: userData.message,
-                              icon: Icon(
-                                Icons.error,
-                                color: Colors.red,
-                              ),
-                            )..show(context);
-                          }
-                        },
-                        onLongPress: () async {
-                          DBProvider.db.newClient(githubApi.user);
-                          Flushbar(
-                            flushbarPosition: FlushbarPosition.TOP,
-                            margin: EdgeInsets.all(8.0),
-                            borderRadius: 10,
-                            duration: Duration(seconds: 3),
-                            message: 'User has been added to bookmarks',
-                            icon: Icon(
-                              Icons.check_circle,
-                              color: Colors.green,
-                            ),
-                          )..show(context);
-                        },
-                      ),
-                    ),
-                  )
+                ? resultCard(
+                    connectivity: connectivity,
+                    githubApi: githubApi,
+                    userData: userData)
                 : Container(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget resultCard(
+      {ConnectivityStatus connectivity, GithubApi githubApi, User userData}) {
+    return Padding(
+      padding: const EdgeInsets.all(50.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+        child: ListTile(
+          leading: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 5.0,
+                    color: Colors.black45,
+                    spreadRadius: 1,
+                    offset: Offset(1, 3)),
+              ],
+            ),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(userData.avatar),
+            ),
+          ),
+          title: Text(
+            userData.username,
+            style: TextStyle(fontSize: 18),
+          ),
+          subtitle: userData.message != 'Error!'
+              ? Text(userData.message)
+              : Text(userData.bio +
+                  '\n' +
+                  '# of repositories: ' +
+                  numberFormat.format(userData.publicRepos)),
+          enabled: connectivity == ConnectivityStatus.Offline ? false : true,
+          onTap: () async {
+            if (userData != null) {
+              try {
+                await githubApi.fetchRepoData(
+                  query: userData.reposUrl,
+                );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => RepoListPage(),
+                  ),
+                );
+              } catch (e) {
+                print(e);
+              }
+            } else {
+              Flushbar(
+                flushbarPosition: FlushbarPosition.TOP,
+                margin: EdgeInsets.all(8.0),
+                borderRadius: 10,
+                duration: Duration(seconds: 5),
+                message: userData.message,
+                icon: Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
+              )..show(context);
+            }
+          },
+          onLongPress: () async {
+            DBProvider.db.newClient(githubApi.user);
+            Flushbar(
+              flushbarPosition: FlushbarPosition.TOP,
+              margin: EdgeInsets.all(8.0),
+              borderRadius: 10,
+              duration: Duration(seconds: 3),
+              message: 'User has been added to bookmarks',
+              icon: Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              ),
+            )..show(context);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class SearchBar extends StatefulWidget {
+  SearchBar({Key key, this.connectivity, this.githubApi}) : super(key: key);
+  final ConnectivityStatus connectivity;
+  final GithubApi githubApi;
+  @override
+  _SearchBarState createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  String searchValue = '';
+  void searchUser(GithubApi githubApi, String searchValue, String category) {
+    githubApi.fetchUserData(
+      query: searchValue,
+      category: category,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 50.0, right: 50.0),
+      child: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).dialogBackgroundColor,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.black,
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: TextField(
+              enabled: widget.connectivity == ConnectivityStatus.Offline
+                  ? false
+                  : true,
+              autofocus: false,
+              cursorColor: Theme.of(context).cursorColor,
+              style: Theme.of(context).textTheme.title,
+              autocorrect: false,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  suffixIcon: IconButton(
+                    highlightColor: Colors.transparent,
+                    icon: widget.githubApi.isFetching == true
+                        ? SpinKitChasingDots(
+                            color: Theme.of(context).cursorColor,
+                            size: 25,
+                          )
+                        : Icon(Icons.check_circle),
+                    color: searchValue == '' ? Colors.grey : Colors.green,
+                    splashColor: Colors.transparent,
+                    onPressed: widget.connectivity == ConnectivityStatus.Offline
+                        ? null
+                        : () {
+                            if (searchValue != '') {
+                              searchUser(
+                                  widget.githubApi, searchValue, 'users');
+                            }
+                          },
+                  ),
+                  hintText: 'Search username'),
+              onChanged: (value) {
+                setState(() {
+                  searchValue = value;
+                });
+              },
+              onSubmitted: (_) {
+                if (searchValue != '') {
+                  searchUser(widget.githubApi, searchValue, 'users');
+                }
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LogoWidget extends StatelessWidget {
+  final Function onThemeChanged;
+  final bool darkTheme;
+  final themeNotifier;
+  const LogoWidget(
+      {Key key, this.onThemeChanged, this.darkTheme = true, this.themeNotifier})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: Center(
+            child: GestureDetector(
+              onDoubleTap: () {
+                onThemeChanged(!darkTheme, themeNotifier);
+              },
+              child: Icon(
+                FontAwesomeIcons.github,
+                size: 80,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+          child: Center(
+            child: Text(
+              'Search',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
