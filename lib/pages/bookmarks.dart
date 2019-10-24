@@ -20,7 +20,7 @@ class BookmarksPage extends StatefulWidget {
 
 class _BookmarksPageState extends State<BookmarksPage> {
   PageController _pageController = PageController();
-
+  GlobalKey _bottomNavigationKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -40,6 +40,7 @@ class _BookmarksPageState extends State<BookmarksPage> {
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         color: Theme.of(context).toggleableActiveColor,
+        key: _bottomNavigationKey,
         animationDuration: Duration(milliseconds: 300),
         index: _page,
         items: <Widget>[
@@ -60,16 +61,23 @@ class _BookmarksPageState extends State<BookmarksPage> {
               curve: Curves.easeInOutQuad);
         },
       ),
-      body: PageView(controller: _pageController, children: <Widget>[
-        BookmarksList(
-          queryUser: DBProvider.db.getAllClients(),
-          isUser: true,
-        ),
-        BookmarksList(
-          queryRepo: DBProvider.db.getAllRepos(),
-          isUser: false,
-        ),
-      ]),
+      body: PageView(
+          onPageChanged: (index) {
+            final CurvedNavigationBarState navBarState =
+                _bottomNavigationKey.currentState;
+            navBarState.setPage(index);
+          },
+          controller: _pageController,
+          children: <Widget>[
+            BookmarksList(
+              queryUser: DBProvider.db.getAllClients(),
+              isUser: true,
+            ),
+            BookmarksList(
+              queryRepo: DBProvider.db.getAllRepos(),
+              isUser: false,
+            ),
+          ]),
     );
   }
 }
