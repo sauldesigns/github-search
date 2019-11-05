@@ -183,18 +183,20 @@ class _SearchPageState extends State<SearchPage> {
             }
           },
           onLongPress: () async {
-            DBProvider.db.newClient(githubApi.user);
-            Flushbar(
-              flushbarPosition: FlushbarPosition.TOP,
-              margin: EdgeInsets.all(8.0),
-              borderRadius: 10,
-              duration: Duration(seconds: 3),
-              message: 'User has been added to bookmarks',
-              icon: Icon(
-                Icons.check_circle,
-                color: Colors.green,
-              ),
-            )..show(context);
+            if (userData != null) {
+              DBProvider.db.newClient(githubApi.user);
+              Flushbar(
+                flushbarPosition: FlushbarPosition.TOP,
+                margin: EdgeInsets.all(8.0),
+                borderRadius: 10,
+                duration: Duration(seconds: 3),
+                message: 'User has been added to bookmarks',
+                icon: Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                ),
+              )..show(context);
+            }
           },
         ),
       ),

@@ -57,11 +57,11 @@ class _BookmarksPageState extends State<BookmarksPage> {
         ],
         onTap: (index) {
           _pageController.animateToPage(index,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.easeInOutQuad);
+              duration: Duration(milliseconds: 500), curve: Curves.linear);
         },
       ),
       body: PageView(
+          physics: NeverScrollableScrollPhysics(),
           onPageChanged: (index) {
             final CurvedNavigationBarState navBarState =
                 _bottomNavigationKey.currentState;
@@ -205,7 +205,7 @@ class CardData extends StatelessWidget {
             : Text(repoData.description),
         enabled: connectivity == ConnectivityStatus.Offline ? false : true,
         onTap: () async {
-          if (userData != null) {
+          if (userData.username != 'Error loading data') {
             try {
               await githubApi.setUser(userData);
               await githubApi.fetchRepoData(
